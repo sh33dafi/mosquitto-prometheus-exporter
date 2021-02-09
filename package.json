@@ -1,0 +1,29 @@
+{
+  "name": "mosquitto-prometheus-exporter",
+  "version": "1.0.0",
+  "description": "Phrometheus exporter for mosquitto",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sh33dafi/mosquitto-prometheus-exporter.git"
+  },
+  "keywords": [
+    "prometheus",
+    "exporter",
+    "mosquitto",
+    "mqtt"
+  ],
+  "author": "Yannick Houbrix",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sh33dafi/mosquitto-prometheus-exporter/issues"
+  },
+  "homepage": "https://github.com/sh33dafi/mosquitto-prometheus-exporter#readme",
+  "dependencies": {
+    "mqtt": "^4.2.6"
+  }
+}
