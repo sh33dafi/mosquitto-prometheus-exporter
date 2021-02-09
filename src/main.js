@@ -2,10 +2,6 @@ const http = require('http');
 const mqtt = require('mqtt');
 const client = mqtt.connect(process.env.BROKER_URL);
 
-client.subscribe(['$SYS/#', 'foo'], (err, granted) => {
-    console.debug(`Subscribed to ${granted.map(granted => granted.topic)}`);
-});
-
 const counterTopics = [
     '$SYS/broker/bytes/received',
     '$SYS/broker/bytes/sent',
@@ -64,22 +60,23 @@ client.on('message', (topic, message) => {
 });
 
 const requestListener = (req, res) => {
-    if (req.url === '/metrics') {
-        res.writeHead(200);
-        res.end(JSON.stringify(Array.from(data.entries()).map(([key, value]) => {
-            return {key: parseTopic(key), value};
-        }).reduce((acc, current) => {
-            acc[current.key] = current.value;
-            return acc;
-        }, {})));
-    } else {
-        res.writeHead(404);
-        res.end('Page not found!');
-    }
+    res.writeHead(200);
+    res.end(JSON.stringify(Array.from(data.entries()).map(([key, value]) => {
+        return {key: parseTopic(key), value};
+    }).reduce((acc, current) => {
+        acc[current.key] = current.value;
+        return acc;
+    }, {})));
 };
 
-const server = http.createServer(requestListener);
-server.listen(3000);
+client.on('connect', () => {
+    client.subscribe(['$SYS/#', 'foo'], (err, granted) => {
+        console.debug(`Subscribed to ${granted.map(granted => granted.topic)}`);
+    });
+
+    const server = http.createServer(requestListener);
+    server.listen(3000).on('listening', () => console.debug('listening on port 3000'));
+});
 
 async function closeGracefully(signal) {
     console.debug(`Received signal to terminate: ${signal}`)
