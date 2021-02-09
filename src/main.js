@@ -26,7 +26,7 @@ const ignoredTopics = [
 
 let data = new Map();
 
-const parseTopic = (topic) => topic.replace('$SYS/', '').replaceAll(/[\s_\-.]/ig, '_');
+const parseTopic = (topic) => topic.replace('$SYS/', '').replaceAll(/[\s_\-./]/ig, '_');
 
 const parseValue = (message) => parseFloat(message);
 
@@ -61,16 +61,14 @@ client.on('message', (topic, message) => {
 
 const requestListener = (req, res) => {
     res.writeHead(200);
-    res.end(JSON.stringify(Array.from(data.entries()).map(([key, value]) => {
-        return {key: parseTopic(key), value};
-    }).reduce((acc, current) => {
-        acc[current.key] = current.value;
-        return acc;
-    }, {})));
+    res.end(Array.from(data.entries())
+        .map(([key, value]) => {
+            return `${parseTopic(key)} {type:${value.type}} ${value.value}`;
+    }).join('\n'));
 };
 
 client.on('connect', () => {
-    client.subscribe(['$SYS/#', 'foo'], (err, granted) => {
+    client.subscribe(['$SYS/#'], (err, granted) => {
         console.debug(`Subscribed to ${granted.map(granted => granted.topic)}`);
     });
 
