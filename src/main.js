@@ -82,7 +82,7 @@ const server = http.createServer(requestListener);
 server.listen(3000);
 
 async function closeGracefully(signal) {
-    console.info(`Received signal to terminate: ${signal}`)
+    console.debug(`Received signal to terminate: ${signal}`)
     client.end(true, {}, () => {
         process.exit()
     });
