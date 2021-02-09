@@ -1,6 +1,6 @@
 {
   "name": "mosquitto-prometheus-exporter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Phrometheus exporter for mosquitto",
   "main": "src/main.js",
   "scripts": {
