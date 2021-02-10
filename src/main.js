@@ -62,8 +62,12 @@ client.on('message', (topic, message) => {
 const requestListener = (req, res) => {
     res.writeHead(200);
     res.end(Array.from(data.entries())
-        .map(([key, value]) => {
-            return `${parseTopic(key)} {type:${value.type}} ${value.value}`;
+        .map(([key, metricValue]) => {
+            const metric = parseTopic(key);
+            const {type, value} = metricValue;
+            return `# HELP ${metric}.
+# TYPE ${metric} ${type}
+${metric} ${value}`;
     }).join('\n'));
 };
 
